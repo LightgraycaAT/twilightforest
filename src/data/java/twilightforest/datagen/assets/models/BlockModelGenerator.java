@@ -19,6 +19,7 @@ import twilightforest.TwilightForestMod;
 import twilightforest.block.*;
 import twilightforest.client.model.block.connected.ConnectedTextureBuilder;
 import twilightforest.client.model.block.patch.PatchBuilder;
+import twilightforest.client.model.item.TrollsteinnItemModel;
 import twilightforest.client.renderer.special.*;
 import twilightforest.datagen.helpers.models.BlockModelBuilders;
 import twilightforest.init.TFBlocks;
@@ -41,6 +42,7 @@ public class BlockModelGenerator extends BlockModelBuilders {
 			.with(plainVariant(ModelLocationUtils.getModelLocation(TFBlocks.TWILIGHT_PORTAL.get())))
 			.with(condition().term(TFPortalBlock.DISALLOW_RETURN, true), plainVariant(ModelLocationUtils.getModelLocation(TFBlocks.TWILIGHT_PORTAL.get(), "_barrier"))));
 
+		this.blockStateOutput.accept(createSimpleBlock(TFBlocks.REACTOR_DEBRIS.get(), plainVariant(ModelTemplates.PARTICLE_ONLY.create(TFBlocks.REACTOR_DEBRIS.get(), TextureMapping.particle(new Material(TwilightForestMod.prefix("block/blank"))), this.modelOutput))));
 		this.spawner(TFBlocks.NAGA_BOSS_SPAWNER.get(), "block/boss_spawner");
 		this.spawner(TFBlocks.LICH_BOSS_SPAWNER.get(), "block/boss_spawner");
 		this.spawner(TFBlocks.MINOSHROOM_BOSS_SPAWNER.get(), "block/boss_spawner");
@@ -229,7 +231,22 @@ public class BlockModelGenerator extends BlockModelBuilders {
 		this.createMultifaceBlock(TFBlocks.HUGE_MUSHGLOOM.get(), mushgloomInside, false);
 		this.createMultifaceBlock(TFBlocks.HUGE_MUSHGLOOM_STEM.get(), mushgloomInside, false);
 		Identifier trollsteinnInside = ModelTemplates.SINGLE_FACE.create(TwilightForestMod.prefix("trollsteinn_inside"), TextureMapping.cube(new Material(TwilightForestMod.prefix("block/trollsteinn_light"))), this.modelOutput);
-		this.createMultifaceBlock(TFBlocks.TROLLSTEINN.get(), trollsteinnInside, true);
+		this.createMultifaceBlockOnly(TFBlocks.TROLLSTEINN.get(), trollsteinnInside, true);
+		this.modelOutput.accept(
+				TwilightForestMod.prefix("item/trollsteinn_light"),
+				() -> ModelTemplates.CUBE_ALL.createBaseTemplate(TwilightForestMod.prefix("item/trollsteinn_light"), Map.of(TextureSlot.ALL, new Material(TwilightForestMod.prefix("block/trollsteinn_light"))))
+		);
+		this.modelOutput.accept(
+				TwilightForestMod.prefix("item/trollsteinn_off"),
+				() -> ModelTemplates.CUBE_ALL.createBaseTemplate(TwilightForestMod.prefix("item/trollsteinn_off"), Map.of(TextureSlot.ALL, new Material(TwilightForestMod.prefix("block/trollsteinn"))))
+		);
+		this.itemModelOutput.accept(
+				TFBlocks.TROLLSTEINN.asItem(),
+				new TrollsteinnItemModel.Unbaked(
+					ItemModelUtils.plainModel(TwilightForestMod.prefix("item/trollsteinn_light")),
+					ItemModelUtils.plainModel(TwilightForestMod.prefix("item/trollsteinn_off"))
+				)
+		);
 		this.createCrossBlockWithDefaultItem(TFBlocks.TROLLVIDR.get(), PlantType.NOT_TINTED);
 		this.createCrossBlockWithDefaultItem(TFBlocks.UNRIPE_TROLLBER.get(), PlantType.NOT_TINTED);
 		this.createCrossBlockWithDefaultItem(TFBlocks.TROLLBER.get(), PlantType.EMISSIVE_NOT_TINTED);
