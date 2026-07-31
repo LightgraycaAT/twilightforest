@@ -36,6 +36,7 @@ public class BlockModelGenerator extends BlockModelBuilders {
 
 	@Override
 	public void run() {
+		this.generateTemplates();
 		this.generateWoodBlocks();
 
 		this.blockStateOutput.accept(MultiPartGenerator.multiPart(TFBlocks.TWILIGHT_PORTAL.get())
@@ -256,10 +257,10 @@ public class BlockModelGenerator extends BlockModelBuilders {
 		this.wrapBlockItem(TFBlocks.SNOWY_CLOUD.get(), this::createTrivialCube);
 		this.wrapBlockItem(TFBlocks.UBEROUS_SOIL.get(), block -> this.createTrivialBlock(block, TexturedModel.createDefault(block1 -> new TextureMapping().put(TextureSlot.DIRT, TextureMapping.getBlockTexture(block)).put(TextureSlot.TOP, TextureMapping.getBlockTexture(block)), ModelTemplates.FARMLAND)));
 
-		this.giantBlock(TFBlocks.GIANT_COBBLESTONE.get(), TFTextureMapping.giantBlock(Blocks.COBBLESTONE));
-		this.giantBlock(TFBlocks.GIANT_LOG.get(), TFTextureMapping.giantBlock(TextureMapping.getBlockTexture(Blocks.OAK_LOG), TextureMapping.getBlockTexture(Blocks.OAK_LOG, "_top")));
-		this.giantBlock(TFBlocks.GIANT_LEAVES.get(), TFTextureMapping.giantBlock(Blocks.OAK_LEAVES), -12012264);
-		this.giantBlock(TFBlocks.GIANT_OBSIDIAN.get(), TFTextureMapping.giantBlock(Blocks.OBSIDIAN));
+		this.giantBlock(TFBlocks.GIANT_COBBLESTONE.get(), Blocks.COBBLESTONE, TFTextureMapping.giantBlock(Blocks.COBBLESTONE));
+		this.giantBlock(TFBlocks.GIANT_LOG.get(), Blocks.OAK_LOG, TFTextureMapping.giantBlock(TextureMapping.getBlockTexture(Blocks.OAK_LOG), TextureMapping.getBlockTexture(Blocks.OAK_LOG, "_top")));
+		this.giantBlock(TFBlocks.GIANT_LEAVES.get(), Blocks.OAK_LEAVES, TFTextureMapping.giantBlock(Blocks.OAK_LEAVES), -12012264);
+		this.giantBlock(TFBlocks.GIANT_OBSIDIAN.get(), Blocks.OBSIDIAN, TFTextureMapping.giantBlock(Blocks.OBSIDIAN));
 
 		this.wrapBlockItem(TFBlocks.CASTLE_BRICK.get(), this::createTrivialCube);
 		this.wrapBlockItem(TFBlocks.WORN_CASTLE_BRICK.get(), this::createTrivialCube);
@@ -379,6 +380,17 @@ public class BlockModelGenerator extends BlockModelBuilders {
 		this.registerSimpleItemModel(TFBlocks.MINOTAUR_LABYRINTH_MINIATURE_STRUCTURE.get(), TwilightForestMod.prefix("block/miniature/labyrinth"));
 		this.blockStateOutput.accept(createSimpleBlock(TFBlocks.DARK_TOWER_MINIATURE_STRUCTURE.get(), plainVariant(TwilightForestMod.prefix("block/miniature/dark_tower"))));
 		this.registerSimpleItemModel(TFBlocks.DARK_TOWER_MINIATURE_STRUCTURE.get(), TwilightForestMod.prefix("block/miniature/dark_tower"));
+	}
+
+	private void generateTemplates() {
+		this.modelOutput.accept(
+				TwilightForestMod.prefix("item/giant_block_gui"),
+				() -> TFExtendedModelTemplates.GIANT_BLOCK_GUI.createBaseTemplate(null, Map.of())
+		);
+		this.modelOutput.accept(
+				TwilightForestMod.prefix("item/giant_block_base"),
+				() -> TFExtendedModelTemplates.GIANT_BLOCK_BASE.createBaseTemplate(null, Map.of())
+		);
 	}
 
 	private void generateWoodBlocks() {

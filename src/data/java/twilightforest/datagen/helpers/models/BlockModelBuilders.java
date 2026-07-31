@@ -6,6 +6,7 @@ import net.minecraft.client.data.models.ItemModelOutput;
 import net.minecraft.client.data.models.MultiVariant;
 import net.minecraft.client.data.models.blockstates.*;
 import net.minecraft.client.data.models.model.*;
+import net.minecraft.client.renderer.block.dispatch.SingleVariant;
 import net.minecraft.client.renderer.block.dispatch.Variant;
 import net.minecraft.client.renderer.block.dispatch.VariantMutator;
 import net.minecraft.client.renderer.item.ItemModel;
@@ -31,6 +32,7 @@ import twilightforest.client.model.block.aurorablock.NoiseVaryingModelBuilder;
 import twilightforest.client.model.block.connected.ConnectedTextureBuilder;
 import twilightforest.client.model.block.forcefield.ForceFieldModel;
 import twilightforest.client.model.block.forcefield.ForceFieldModelBuilder;
+import twilightforest.client.model.block.giantblock.GiantBlockStateBuilder;
 import twilightforest.client.renderer.block.JarRenderer;
 import twilightforest.client.renderer.special.MasonJarSpecialRenderer;
 import twilightforest.client.renderer.special.SkullCandleSpecialRenderer;
@@ -104,8 +106,11 @@ public abstract class BlockModelBuilders extends WoodBlockBuilders {
 		this.registerSimpleTintedItemModel(block, BuiltInRegistries.BLOCK.getKey(block).withPrefix("block/"), ItemModelUtils.constantTint(tint));
 	}
 
-	public void giantBlock(Block block, TextureMapping mapping) {
-		this.blockStateOutput.accept(createSimpleBlock(block, plainVariant(TFModelTemplates.GIANT_BLOCK.create(block, mapping, this.modelOutput))));
+	public void giantBlock(Block block, Block base, TextureMapping mapping) {
+		this.blockStateOutput.accept(
+				MultiVariantGenerator.dispatch(
+						block,
+						MultiVariant.of(new GiantBlockStateBuilder(new SingleVariant.Unbaked(plainModel(ModelLocationUtils.getModelLocation(base)))))));
 		this.generateGiantBlockItem(block, mapping);
 	}
 
@@ -115,8 +120,12 @@ public abstract class BlockModelBuilders extends WoodBlockBuilders {
 		this.itemModelOutput.accept(giantBlock.asItem(), ItemModelUtils.select(new DisplayContext(), base, ItemModelUtils.when(ItemDisplayContext.GUI, gui)));
 	}
 
-	public void giantBlock(Block block, TextureMapping mapping, int tint) {
-		this.blockStateOutput.accept(createSimpleBlock(block, plainVariant(TFModelTemplates.GIANT_BLOCK.create(block, mapping, this.modelOutput))));
+	public void giantBlock(Block block, Block base, TextureMapping mapping, int tint) {
+		this.blockStateOutput.accept(
+				MultiVariantGenerator.dispatch(
+						block,
+						MultiVariant.of(new GiantBlockStateBuilder(new SingleVariant.Unbaked(plainModel(ModelLocationUtils.getModelLocation(base)))))));
+
 		this.generateGiantBlockItem(block, mapping, tint);
 	}
 
