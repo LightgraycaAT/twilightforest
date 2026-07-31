@@ -54,6 +54,7 @@ import twilightforest.client.model.block.carpet.RoyalRagsModelLoader;
 import twilightforest.client.model.block.connected.ConnectedTextureModelLoader;
 import twilightforest.client.model.block.forcefield.ForceFieldModelLoader;
 import twilightforest.client.model.block.giantblock.UnbakedGiantBlockStateModel;
+import twilightforest.client.model.block.patch.PatchModel;
 import twilightforest.client.model.block.patch.PatchModelLoader;
 import twilightforest.client.model.entity.*;
 import twilightforest.client.model.item.TravellersGearItemModel;
@@ -125,6 +126,7 @@ public class ClientRegistrationEvents {
 	}
 
 	private void registerBlockStateModels(RegisterBlockStateModels event) {
+		event.registerModel(TwilightForestMod.prefix("patch"), PatchModel.Unbaked.CODEC);
 		event.registerModel(TwilightForestMod.prefix("giant_block"), UnbakedGiantBlockStateModel.MAP_CODEC);
 		event.registerModel(TwilightForestMod.prefix("noise_varying"), UnbakedNoiseVaryingBlockStateModel.MAP_CODEC);
 	}

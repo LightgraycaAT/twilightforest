@@ -17,8 +17,10 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.joml.Vector3f;
 import twilightforest.TwilightForestMod;
 import twilightforest.block.*;
+import twilightforest.client.model.block.TFSimpleModelBuilder;
 import twilightforest.client.model.block.connected.ConnectedTextureBuilder;
 import twilightforest.client.model.block.patch.PatchBuilder;
+import twilightforest.client.model.block.patch.PatchModel;
 import twilightforest.client.model.item.TrollsteinnItemModel;
 import twilightforest.client.renderer.special.*;
 import twilightforest.datagen.helpers.models.BlockModelBuilders;
@@ -70,8 +72,40 @@ public class BlockModelGenerator extends BlockModelBuilders {
 		this.blockStateOutput.accept(createSimpleBlock(TFBlocks.MAYAPPLE.get(), plainVariant(ModelLocationUtils.getModelLocation(TFBlocks.MAYAPPLE.get()))));
 		this.blockStateOutput.accept(createSimpleBlock(TFBlocks.POTTED_MAYAPPLE.get(), plainVariant(ModelLocationUtils.getModelLocation(TFBlocks.POTTED_MAYAPPLE.get()))));
 		this.registerSimpleFlatItemModel(TFBlocks.MAYAPPLE.get());
-		this.blockStateOutput.accept(createSimpleBlock(TFBlocks.CLOVER_PATCH.get(), plainVariant(TFModelTemplates.create("block", TextureSlot.TEXTURE, TextureSlot.PARTICLE).extend().customLoader(PatchBuilder::new, builder -> {
-		}).build().create(TFBlocks.CLOVER_PATCH.get(), TextureMapping.defaultTexture(TFBlocks.CLOVER_PATCH.get()), this.modelOutput))));
+		this.blockStateOutput.accept(
+                MultiVariantGenerator.dispatch(
+                        // The block to generate the model for
+                        TFBlocks.CLOVER_PATCH.get(),
+                        // Our custom block state builder
+                        MultiVariant.of(new TFSimpleModelBuilder(new PatchModel.Unbaked(
+                                ModelTemplates.create(TextureSlot.TEXTURE, TextureSlot.PARTICLE).extend().customLoader(
+                                        PatchBuilder::new,
+										_ -> {}
+                                ).build().create(
+                                        TFBlocks.CLOVER_PATCH.get(),
+                                        TextureMapping.defaultTexture(TFBlocks.CLOVER_PATCH.get()),
+                                        this.modelOutput
+                                )
+                        )
+                        ))
+                )
+        );
+		this.blockStateOutput.accept(
+                MultiVariantGenerator.dispatch(
+                        TFBlocks.MOSS_PATCH.get(),
+                        MultiVariant.of(new TFSimpleModelBuilder(new PatchModel.Unbaked(
+                                ModelTemplates.create(TextureSlot.TEXTURE, TextureSlot.PARTICLE).extend().customLoader(
+                                        PatchBuilder::new,
+                                        PatchBuilder::shaggify
+                                ).build().create(
+                                        TFBlocks.MOSS_PATCH.get(),
+                                        TextureMapping.defaultTexture(TFBlocks.MOSS_PATCH.get()),
+                                        this.modelOutput
+                                )
+                        )
+                        ))
+                )
+        );
 		this.registerSimpleFlatItemModel(TFBlocks.CLOVER_PATCH.asItem());
 		this.blockStateOutput.accept(createSimpleBlock(TFBlocks.MOSS_PATCH.get(), plainVariant(TFModelTemplates.create("block", TextureSlot.TEXTURE, TextureSlot.PARTICLE).extend().customLoader(PatchBuilder::new, PatchBuilder::shaggify).build().create(TFBlocks.MOSS_PATCH.get(), TextureMapping.defaultTexture(TFBlocks.MOSS_PATCH.get()), this.modelOutput))));
 		this.registerSimpleFlatItemModel(TFBlocks.MOSS_PATCH.asItem());
