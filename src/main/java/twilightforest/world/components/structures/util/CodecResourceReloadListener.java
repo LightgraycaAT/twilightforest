@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.JsonOps;
 import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -63,8 +62,7 @@ public abstract class CodecResourceReloadListener<T> extends SimpleJsonResourceR
 
 	protected void deserialize(ResourceManager manager, Identifier location, JsonElement jsonElement) {
 		try {
-			// FIXME If there are empty holders during deserialization then JsonOps.INSTANCE needs to be augmented with RegistryOps
-			Optional<T> checkFile = this.codec.parse(JsonOps.INSTANCE, jsonElement).result();
+            Optional<T> checkFile = this.codec.parse(this.makeConditionalOps(), jsonElement).result();
 			if (checkFile.isPresent()) {
 				this.forLocation(manager, location, checkFile.get());
 			} else {
